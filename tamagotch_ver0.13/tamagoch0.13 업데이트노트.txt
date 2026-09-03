@@ -1,0 +1,5 @@
+1. GameRule이 이제 world를 자동으로 상속받습니다.
+2. GameObject에 이제 setBody함수를 beginPlay에 넣어주면, 이미지가 화면에 생성됩니다.
+3. GameInstance에 전역변수가 추가되었습니다.
+- 화면사이즈
+4. GameObject의 destory메서드를 업데이트하였습니다. 이제 오브젝트 삭제 시 destory메서드를 호출하면 삭제합니다.
