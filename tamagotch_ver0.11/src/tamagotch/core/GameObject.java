@@ -1,8 +1,12 @@
 package src.tamagotch.core;
 
+import java.awt.Label;
+
 public abstract class GameObject {
     GameInstance gameinstance;
     World world;
+    Label body;
+
     boolean isPendingKill;
 
     public GameObject(){

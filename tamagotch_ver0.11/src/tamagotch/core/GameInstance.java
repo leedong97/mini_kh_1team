@@ -22,7 +22,11 @@ public class GameInstance {
     public void setWorld(World world){
         this.world = world;
         GameInstanceThread git = new GameInstanceThread(this.world, 60);
-        git.isDaemon();
+        git.setDaemon(true);
         git.start();
+    }
+
+    public World getWorld(){
+        return world;
     }
 }

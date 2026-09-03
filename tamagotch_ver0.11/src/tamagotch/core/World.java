@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class World extends Panel {
     //월드에 존재하는 모든 오브젝트 목록
-    private final List<GameObject> actors = new ArrayList<>();
+    protected final List<GameObject> actors = new ArrayList<>();
     
     public World(){
         GameInstance.getInstance().setWorld(this);

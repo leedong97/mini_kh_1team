@@ -4,8 +4,13 @@ import src.tamagotch.core.GameObject;
 
 public class Food extends GameObject {
 
-    int dd = 100;
-
+    public String name;
+    public Food(String name){
+        this.name = name;
+        // String[] names = {"분유", "고기", "쌀", "과자"};
+        // int rnd = (int)Math.random() * 4;
+        // name = names[rnd];
+    }
     @Override
     public void beginPlay() {
         // TODO Auto-generated method stub
@@ -13,11 +18,5 @@ public class Food extends GameObject {
     @Override
     public void update() {
         
-        if(dd < 50){
-            System.out.println("씻고싶어요.");
-        }
-        else
-            System.out.println(dd--);
-        // TODO Auto-generated method stub
     }
 }

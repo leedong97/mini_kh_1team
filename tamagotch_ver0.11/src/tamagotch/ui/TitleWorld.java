@@ -11,14 +11,7 @@ public class TitleWorld extends Panel{
 
     public TitleWorld(){
         font = new Font("맑은고딕", Font.BOLD, 30);
-        //메인화면 페널
-        
-        //새친구선택
-        //ㄴ팻 종류 선택(이미지만변경)
-            //ㄴ이름을 지어주세요.
-                //ㄴ이름을 입력안하면 렌덤네이밍
-                    //ㄴ시작
-
+       
         //친구불러오기
         //ㄴ 저장날짜, 이름, 나이, 성별, 파일삭제
 
@@ -29,8 +22,9 @@ public class TitleWorld extends Panel{
         
         //게임종료
         //타이틀 폰트 세팅
+        setLayout(null);
         mainUI01();
-
+        //btn_0_1_setpetname();
         
     }
 
@@ -40,14 +34,12 @@ public class TitleWorld extends Panel{
         titletext.setFont(font);
         titletext.setBounds(150, 50, 300, 50);
         
-        setLayout(null);
         add(titletext);
         String[] titleStr = {
             "새친구선택", "친구불러오기", "설정", "크레딧"
         };
 
         int heigth = 100;
-
         List<Button> btnarray = new ArrayList<Button>();
 
         for(String str : titleStr){
@@ -63,6 +55,14 @@ public class TitleWorld extends Panel{
             public void actionPerformed(ActionEvent e) {
                 removeAll();
                 btn_0_0_patList();//첫번째 버튼 이벤트 실행
+            }
+        });
+
+        //설정 눌렀을때
+        btnarray.get(2).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("설정버튼 누름");
             }
         });
     }
@@ -105,5 +105,13 @@ public class TitleWorld extends Panel{
         title.setFont(font);
         title.setBounds(150, 50, 300, 50);
         add(title);
+        Label setName = new Label("이름을 입력하세요");
+        setName.setFont(font);
+        setName.setBounds(100, 130, 300, 50);
+        add(setName);
+
+        Button btn = new Button("게임시작");
+        btn.setBounds(150, 200, 300, 50);
+        add(btn);
     }
 }
