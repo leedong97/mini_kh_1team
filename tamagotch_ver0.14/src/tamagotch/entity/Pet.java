@@ -22,34 +22,39 @@ public class Pet extends GameObject{
     @Override
     public void beginPlay() {
         // TODO Auto-generated method stub
-        setBody("src/tamagotch/img/Pet01/Pet01.png",100, 100);
+        //setBody("src/tamagotch/img/Pet01/Pet01.png",100, 100);
+        setBody("🐙",70);
+        
     }
     @Override
     public void update() {
-        //test.setBounds(50,y--,100,100);
         updateStat();//배고픔 관리 함수
+        setLocation(x, y);
     }
 
-    public void setName(){
-        
+    public void setName(String name){
+        this.name = name;
     }
 
     private void updateStat(){
-        //levelOfHunger -= 0.01;
-        levelOfHunger -= 0.1;
+        levelOfHunger -= 0.01;
         if(levelOfHunger > 50){
         }else if(levelOfHunger > 0){
             System.out.println("배고파");
-            //경식씨
-            // world.getGameObject("Food");
-            // feeding();
 
+            if(world != null){
+                Food food = world.getGameObject("Food");
+                if(food != null){
+                    food.using(this);
+                }
+            }
+            // 
         }else {
             //펫사망?
             System.out.println("팻사망");
             destory();
         }
-        System.out.println(levelOfHunger);
+        //System.out.println(levelOfHunger);
     }
 
     public void feeding(Food food){

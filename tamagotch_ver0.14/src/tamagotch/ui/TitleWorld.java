@@ -3,6 +3,8 @@ package src.tamagotch.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,9 +115,28 @@ public class TitleWorld extends Panel{
         title.setFont(font);
         title.setBounds(150, 50, 300, 50);
         add(title);
-        Label setName = new Label("이름을 입력하세요");
-        setName.setFont(font);
-        setName.setBounds(100, 130, 300, 50);
+        TextField setName = new TextField("이름을 입력하세요.");
+        Font subFont = new Font("",Font.PLAIN, 15);
+        setName.setFont(subFont);
+        setName.setBounds(100, 130, 300, 30);
+
+        setName.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (setName.getText().equals("이름을 입력하세요.")) {
+                    setName.setText("");
+                    setName.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (setName.getText().trim().isEmpty()) {
+                    setName.setText("이름을 입력하세요.");
+                    setName.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
         add(setName);
 
         Button btn = new Button("게임시작");
@@ -125,7 +146,7 @@ public class TitleWorld extends Panel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 removeAll();
-                GameWorld newWorld = new GameWorld(gf); 
+                GameWorld newWorld = new GameWorld(gf, setName.getText()); 
                 gf.add(newWorld);
                 gf.remove(TitleWorld.this);
 

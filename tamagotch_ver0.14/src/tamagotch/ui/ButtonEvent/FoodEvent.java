@@ -53,7 +53,7 @@ public class FoodEvent extends GameRule implements ActionListener{
     }
 
     public void feedMe(){
-        world.spawnActor(new Food("고기"));
+        //world.spawnActor(new Food("고기"));
         System.out.println("밥을줬습니다.");
     }
 

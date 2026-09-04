@@ -1,6 +1,7 @@
 package src.tamagotch.core;
 
 import java.awt.Container;
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -12,8 +13,8 @@ public abstract class GameObject {
     protected ImageIcon imag;
     protected String objectName;
 
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
     protected boolean isPendingKill;
 
@@ -58,15 +59,28 @@ public abstract class GameObject {
         this.imag = new ImageIcon(path);
         this.body = new JLabel(this.imag);
         this.body.setSize(sizX, sizY);
-        this.body.setLocation(gameinstance.gameFrameSizX/2 - sizX/2, gameinstance.gameFrameSizY/2 - sizX/2);
+        this.x = gameinstance.gameFrameSizX/2 - sizX/2;
+        this.y = gameinstance.gameFrameSizY/2 - sizY/2;
+        this.body.setLocation(this.x, this.y);
         world.add(body);
+        world.repaint();
+    }
+
+    public void setBody(String path, int siz){
+        this.body = new JLabel(path);
+        this.body.setFont(new Font("",Font.PLAIN,siz));
+        this.body.setSize(100, 100);
+        this.x = gameinstance.gameFrameSizX/2 - 50;
+        this.y = gameinstance.gameFrameSizY/2 - 50;
+        this.body.setLocation(this.x,this.y);
+        world.add(body);
+        world.repaint();
     }
 
     public void setLocation(int x, int y){
         this.x = x;
         this.y = y;
-
-        body.setLocation(this.x, this.y);
+        body.setLocation(x, y);
     }
 
     public void setObject(String objectName){

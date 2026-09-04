@@ -1,46 +1,90 @@
 package src.tamagotch.ui;
 
 import java.awt.Button;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
+import javax.swing.JButton;
+
+import src.tamagotch.core.CVector2D;
 import src.tamagotch.core.GameInstance;
 import src.tamagotch.core.World;
+import src.tamagotch.core.algo.Algo;
 import src.tamagotch.entity.Food;
 import src.tamagotch.entity.Pet;
 import src.tamagotch.ui.ButtonEvent.FoodEvent;
 
 public class GameWorld extends World{
-    private Button[] buttons;
+    private JButton[] buttons;
     private GamFram gf ;
     
     public GameWorld(GamFram gf){
         buttonSet();
+        setLayout(null);
         this.gf = gf;
 
         Pet pet = spawnActor(new Pet(), "Pet");
-        
+        String rn = Algo.randomName();
+        pet.setName(rn);
+
+        setdisplay();
+    }
+
+    public GameWorld(GamFram gf, String petName){
+        buttonSet();
+        setLayout(null);
+        this.gf = gf;
+
+        Pet pet = spawnActor(new Pet(), "Pet");
+
+        if(petName.equals("이름을 입력하세요.") || petName.equals("") || petName == null){
+            String rn = Algo.randomName();
+            pet.setName(rn);
+        }else{
+            pet.setName(petName);
+        }
+
+        setdisplay();
     }
 
     private void buttonSet(){
         // 버튼 생성     
-        String[] buttonNames= {"스테이터스","밥주기","목욕","똥치우기","미니게임",
-        "약먹이기","운동 시키기","취침"};
-        buttons = new Button[buttonNames.length];
+        String[] buttonNames= {"😊","🍚","🛁","🚽","🎮","💊","🎾","💤"};
+        buttons = new JButton[buttonNames.length];
 
         setLayout(null);
         //버튼 배치 윗줄
-        for(int i =0; i<buttonNames.length/2 + 1; i++){
-            buttons[i] = new Button(buttonNames[i]);
-            buttons[i].setBounds(600/(buttonNames.length/2 + 1)*i,0,600/(buttonNames.length/2 + 1),100);
+
+        int btnsiz = GameInstance.getInstance().gameFrameSizX/(buttonNames.length/2);
+
+        for(int i = 0; i < buttonNames.length/2; i++){
+            buttons[i] = new JButton(buttonNames[i]);
+            buttons[i].setFont(new Font("",Font.PLAIN,20));
+            buttons[i].setBorderPainted(false);
+            buttons[i].setContentAreaFilled(false);
+            buttons[i].setBounds(btnsiz * i, 0, btnsiz, btnsiz/2);
             add(buttons[i]);
+            setComponentZOrder(buttons[i], 100);
         }
     
         //버튼 배치 아랫줄
-        for(int i =buttonNames.length/2 + 1; i<buttonNames.length; i++){
-            buttons[i] = new Button(buttonNames[i]);
-            buttons[i].setBounds(600/(buttonNames.length/2)*(i-(buttonNames.length/2 + 1)),465,600/(buttonNames.length/2),100);
-            add(buttons[i]);
+        for(int i = 0; i < buttonNames.length/2; i++){
+            buttons[i + buttonNames.length/2] = new JButton(buttonNames[i + buttonNames.length/2]);
+            buttons[i + buttonNames.length/2].setFont(new Font("",Font.PLAIN,20));
+            buttons[i + buttonNames.length/2].setBorderPainted(false);
+            buttons[i + buttonNames.length/2].setContentAreaFilled(false);
+            buttons[i + buttonNames.length/2].setBounds(
+                btnsiz * i
+                , GameInstance.getInstance().gameFrameSizY - (btnsiz/2 + 30)
+                , btnsiz
+                , btnsiz/2
+            );
+            add(buttons[i + buttonNames.length/2]);
+            setComponentZOrder(buttons[i + buttonNames.length/2], 100);
         }
     
         //버튼별로 실행시 감지자로 해당버튼 클릭시 원하는 이벤트를 출력 및 실행
@@ -59,8 +103,7 @@ public class GameWorld extends World{
                                 break;
                             case 1:
                                 // 밥주기
-                                //foodEvent();
-                                new FoodEvent().feedMe();
+                                foodEvent();
                                 break;
                             case 2:
                                 // 목욕
@@ -94,42 +137,70 @@ public class GameWorld extends World{
     public void foodEvent(){
         String[] meals = {"분유", "고기", "쌀", "과자", "닫기"}; // -> 이구조로 다른 것들도 짜면 좋을듯
         Button[] mealButtons = new Button[meals.length];
+
+        int btnSizX = 50;
+        int btnSizY = 30;
+
         for(int i = 0; i < meals.length; i++){
             mealButtons[i] = new Button(meals[i]);
-            mealButtons[i].setBounds(550,150+30*i,30,30);
+            mealButtons[i].setBounds(
+                GameInstance.getInstance().gameFrameSizX - btnSizX*2
+                ,150+(btnSizY*i) + 20
+                ,btnSizX
+                ,btnSizY
+            );
 
             mealButtons[i].addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String mealType = ((Button) e.getSource()).getLabel();
-                System.out.println(mealType + " 버튼이 클릭됨");
-                if(mealType.equals("닫기")){
-                    for(int j = 0; j < mealButtons.length; j++){
-                        remove(mealButtons[j]);
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String mealType = ((Button) e.getSource()).getLabel();
+                    if(mealType.equals("닫기")){
+                        for(int j = 0; j < mealButtons.length; j++){
+                            GameWorld.this.remove(mealButtons[j]);
+                        }
+                    }else{
+                        spawnActor(new Food(mealType), "Food");
                     }
-
-                }else{
-                    FoodEvent foodEvent = new FoodEvent();
-                    foodEvent.feedMe(mealType);
+                    // 여기서 실제 밥을 먹이는 처리를 넣을 수 있습니다.
                 }
-                // 여기서 실제 밥을 먹이는 처리를 넣을 수 있습니다.
-                Food food = new Food(mealType);// 예시: 
-                GameInstance.getInstance().getWorld().spawnActor(food);
-                spawnActor(null);
-            }
             });
-
             add(mealButtons[i]);
+            setComponentZOrder(mealButtons[i], 100);
+        }
+        System.out.println("밥주기 버튼 클릭됨");
+    };//
+
+    //화면분할 함수
+    public void setdisplay(){
+        int sizX = GameInstance.getInstance().gameFrameSizX;
+        int sizY = GameInstance.getInstance().gameFrameSizY;
+
+        int n = 20;//화면분할갯수
+        int dis = sizX/n;
+        
+        CVector2D[][] display = new CVector2D[n][n];
+        
+        for(int y = 0; y < n; y++){ 
+            for(int x = 0; x < n; x++)
+                display[y][x] = new CVector2D(dis*x, dis*y);
         }
 
-        //버튼 이름에 따라 Food 생성되게
-        // Food food = GameInstance.getInstance().getWorld()
-        // .spawnActor(new Food(버튼 이름 받아서 넣기));
+        Random r = new Random();
+        for(int i = 0; i < display.length; i++){
+            for(int j = 0; j < display.length; j++){
+                Label fr = new Label();
+                int xx = (int)display[i][j].x;
+                int yy = (int)display[i][j].y;
+                fr.setSize(dis, dis);
+                fr.setLocation(xx, yy);
 
-        //각 버튼의 actionListener을 다시 설정해야함 -> 이 action에 버튼 관련 모두 담고 다른 곳으로 빼고 
-        
-        System.out.println("밥주기 버튼 클릭됨");
-        // 버튼 클릭 시 실행될 코드
-    };
+                fr.setBackground(new Color(r.nextInt(255)
+                    ,r.nextInt(255)
+                    ,r.nextInt(255)
+                ));
+                add(fr, 0);
+                setComponentZOrder(fr, 0);
+            }
+        }
+    }
 }

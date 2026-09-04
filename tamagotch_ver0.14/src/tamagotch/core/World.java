@@ -52,11 +52,13 @@ public class World extends Panel {
     }
 
     public <T extends GameObject> T getGameObject (String objectName){
-        
+        if(objectName == null) return null;
         for(GameObject object:actors){
-            if(object.getObjectName().equals(objectName))
+            if(object == null) continue;
+            if(objectName.equals(object.getObjectName()))
                 return (T) object;
         }
+
         return null;
     }
 }

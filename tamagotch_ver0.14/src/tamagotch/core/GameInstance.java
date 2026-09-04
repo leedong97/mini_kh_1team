@@ -10,6 +10,7 @@ public class GameInstance {
     //델리게게이트는 인스턴스를 상속받은 자식클레스로 생성전달
     private static GameInstance instance;
     private World world;
+    private GameInstanceThread git;
 
     private GameInstance() {
     }
@@ -23,7 +24,7 @@ public class GameInstance {
 
     public void setWorld(World world){
         this.world = world;
-        GameInstanceThread git = new GameInstanceThread(this.world, 60);
+        git = new GameInstanceThread(this.world, 60);
         git.setDaemon(true);
         git.start();
     }
