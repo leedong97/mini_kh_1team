@@ -1,5 +1,11 @@
 package src.tamagotch;
 
+import java.awt.Frame;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import src.tamagotch.ui.GamFram;
 
 public class Main {
@@ -9,5 +15,7 @@ public class Main {
 
         //월드 생성
         //게임 인스턴스 초기화
+
+        //디버깅용 프레임
     }
 }

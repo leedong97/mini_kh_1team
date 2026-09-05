@@ -21,6 +21,8 @@ import src.tamagotch.ui.ButtonEvent.FoodEvent;
 public class GameWorld extends World{
     private JButton[] buttons;
     private GamFram gf ;
+
+    private int buttonsection = 0; //버튼 섹션
     
     public GameWorld(GamFram gf){
         buttonSet();
@@ -30,15 +32,14 @@ public class GameWorld extends World{
         Pet pet = spawnActor(new Pet(), "Pet");
         String rn = Algo.randomName();
         pet.setName(rn);
-
-        setdisplay();
     }
 
     public GameWorld(GamFram gf, String petName){
+        setdisplay();
         buttonSet();
         setLayout(null);
         this.gf = gf;
-
+        
         Pet pet = spawnActor(new Pet(), "Pet");
 
         if(petName.equals("이름을 입력하세요.") || petName.equals("") || petName == null){
@@ -47,8 +48,6 @@ public class GameWorld extends World{
         }else{
             pet.setName(petName);
         }
-
-        setdisplay();
     }
 
     private void buttonSet(){
@@ -67,8 +66,7 @@ public class GameWorld extends World{
             buttons[i].setBorderPainted(false);
             buttons[i].setContentAreaFilled(false);
             buttons[i].setBounds(btnsiz * i, 0, btnsiz, btnsiz/2);
-            add(buttons[i]);
-            setComponentZOrder(buttons[i], 100);
+            add(buttons[i],1);
         }
     
         //버튼 배치 아랫줄
@@ -83,8 +81,7 @@ public class GameWorld extends World{
                 , btnsiz
                 , btnsiz/2
             );
-            add(buttons[i + buttonNames.length/2]);
-            setComponentZOrder(buttons[i + buttonNames.length/2], 100);
+            add(buttons[i + buttonNames.length/2],1);
         }
     
         //버튼별로 실행시 감지자로 해당버튼 클릭시 원하는 이벤트를 출력 및 실행
@@ -135,6 +132,9 @@ public class GameWorld extends World{
     }
 
     public void foodEvent(){
+
+        if(buttonsection == 2) return;//섹션이 같으면 반환, 저튼 중복생성 방지
+
         String[] meals = {"분유", "고기", "쌀", "과자", "닫기"}; // -> 이구조로 다른 것들도 짜면 좋을듯
         Button[] mealButtons = new Button[meals.length];
 
@@ -157,6 +157,7 @@ public class GameWorld extends World{
                     if(mealType.equals("닫기")){
                         for(int j = 0; j < mealButtons.length; j++){
                             GameWorld.this.remove(mealButtons[j]);
+                            buttonsection = 0;
                         }
                     }else{
                         spawnActor(new Food(mealType), "Food");
@@ -164,8 +165,10 @@ public class GameWorld extends World{
                     // 여기서 실제 밥을 먹이는 처리를 넣을 수 있습니다.
                 }
             });
-            add(mealButtons[i]);
-            setComponentZOrder(mealButtons[i], 100);
+
+            buttonsection = 2;
+            
+            add(mealButtons[i],2);
         }
         System.out.println("밥주기 버튼 클릭됨");
     };//
@@ -175,7 +178,7 @@ public class GameWorld extends World{
         int sizX = GameInstance.getInstance().gameFrameSizX;
         int sizY = GameInstance.getInstance().gameFrameSizY;
 
-        int n = 20;//화면분할갯수
+        int n = 11;//화면분할갯수
         int dis = sizX/n;
         
         CVector2D[][] display = new CVector2D[n][n];
@@ -199,7 +202,6 @@ public class GameWorld extends World{
                     ,r.nextInt(255)
                 ));
                 add(fr, 0);
-                setComponentZOrder(fr, 0);
             }
         }
     }

@@ -1,5 +1,8 @@
 package src.tamagotch.core;
 
+import src.tamagotch.core.GameThread.GameAnimThread;
+import src.tamagotch.core.GameThread.GameMainThread;
+
 public class GameInstance {
     public final int WINFRAME_W = 1920;
     public final int WINFRAME_Y = 1080;
@@ -10,7 +13,8 @@ public class GameInstance {
     //델리게게이트는 인스턴스를 상속받은 자식클레스로 생성전달
     private static GameInstance instance;
     private World world;
-    private GameInstanceThread git;
+    private GameMainThread git;
+    private GameAnimThread gat;
 
     private GameInstance() {
     }
@@ -24,9 +28,9 @@ public class GameInstance {
 
     public void setWorld(World world){
         this.world = world;
-        git = new GameInstanceThread(this.world, 60);
-        git.setDaemon(true);
-        git.start();
+        git = new GameMainThread(this.world, 60);
+        gat = new GameAnimThread(this.world, 12);
+        //데몬등 스레드 설정을 생성자로 옮겼습니다.
     }
 
     public World getWorld(){

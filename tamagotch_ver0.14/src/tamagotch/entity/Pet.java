@@ -23,13 +23,13 @@ public class Pet extends GameObject{
     public void beginPlay() {
         // TODO Auto-generated method stub
         //setBody("src/tamagotch/img/Pet01/Pet01.png",100, 100);
-        setBody("🐙",70);
-        
+        setBody("src/tamagotch/img/Pet01");
+        //애니메이션 실행
+        isAnim = true;
     }
     @Override
     public void update() {
         updateStat();//배고픔 관리 함수
-        setLocation(x, y);
     }
 
     public void setName(String name){
@@ -37,10 +37,13 @@ public class Pet extends GameObject{
     }
 
     private void updateStat(){
-        levelOfHunger -= 0.01;
+        levelOfHunger -= 0.1;
         if(levelOfHunger > 50){
         }else if(levelOfHunger > 0){
             System.out.println("배고파");
+
+            //배고픔으로 상태전환(아직 배고픔관련 애니메이션이 없어 move로 전환)
+            if(objCase.equals("normal"))setObjectCase("move");
 
             if(world != null){
                 Food food = world.getGameObject("Food");

@@ -8,9 +8,10 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import src.tamagotch.core.World;
 import src.tamagotch.ui.ButtonEvent.SaveButtonEvent;
 
-public class TitleWorld extends Panel{
+public class TitleWorld extends World{
     public Font font; //전역변수로 옮길 예정
     private GamFram gf;
 

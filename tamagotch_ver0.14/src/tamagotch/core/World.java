@@ -1,10 +1,11 @@
 package src.tamagotch.core;
 
 import java.util.List;
-import java.awt.Panel;
+
+import javax.swing.JPanel;
 import java.util.ArrayList;
 
-public class World extends Panel {
+public class World extends JPanel {
     //월드에 존재하는 모든 오브젝트 목록
     protected final List<GameObject> actors = new ArrayList<>();
     
@@ -49,6 +50,16 @@ public class World extends Panel {
 
         //삭제 == true 오브젝트 제거
         actors.removeIf(GameObject::isPendingKill);
+    }
+
+    public void updateAnim(){
+        for(GameObject actor : actors) {
+            if (!actor.isPendingKill()) {
+                actor.updateAnim();
+            }else{
+                //getBody()는 JLable반환
+            }
+        }
     }
 
     public <T extends GameObject> T getGameObject (String objectName){

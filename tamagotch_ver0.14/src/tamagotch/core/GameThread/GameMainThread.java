@@ -1,12 +1,17 @@
-package src.tamagotch.core;
+package src.tamagotch.core.GameThread;
 
-public class GameInstanceThread extends Thread{
+import src.tamagotch.core.World;
+
+public class GameMainThread extends Thread{
     private World world;
     private int fps;
 
-    GameInstanceThread(World world, int fps){
+    public GameMainThread(World world, int fps){
         this.world = world;
         this.fps = fps;
+
+        setDaemon(true);
+        start();
     }
 
     @Override
