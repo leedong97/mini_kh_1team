@@ -8,6 +8,7 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import src.tamagotch.core.GameInstance;
 import src.tamagotch.core.World;
 import src.tamagotch.ui.ButtonEvent.SaveButtonEvent;
 
@@ -17,7 +18,7 @@ public class TitleWorld extends World{
 
     public TitleWorld(GamFram gf){
         this.gf = gf;
-        font = new Font("맑은고딕", Font.BOLD, 30);
+        font = new Font("맑은고딕", Font.BOLD, 50);
        
         //친구불러오기
         //ㄴ 저장날짜, 이름, 나이, 성별, 파일삭제
@@ -37,13 +38,15 @@ public class TitleWorld extends World{
 
     public void mainUI01(){
         
-        Label titletext = new Label("즐거운타마고치");
+        Label titletext = new Label("슬라임키우기");
         titletext.setFont(font);
-        titletext.setBounds(150, 50, 300, 50);
+        titletext.setBounds(
+            GameInstance.getInstance().gameFrameSizX/2 - 150
+            , 50, 300, 50);
         
         add(titletext);
         String[] titleStr = {
-            "새친구선택", "친구불러오기", "설정", "크레딧"
+            "새친구선택", "친구불러오기", "설정", "크레딧","Exit"
         };
 
         int heigth = 100;
@@ -51,7 +54,9 @@ public class TitleWorld extends World{
 
         for(String str : titleStr){
             Button btn = new Button(str);
-            btn.setBounds(50, heigth += 30, 100,30);
+            btn.setBounds(
+                GameInstance.getInstance().gameFrameSizX/2 - 75
+                , heigth += 50, 150,50);
             add(btn);
             btnarray.add(btn);
         }
@@ -61,12 +66,12 @@ public class TitleWorld extends World{
             @Override
             public void actionPerformed(ActionEvent e) {
                 removeAll();
-                btn_0_0_patList();//첫번째 버튼 이벤트 실행
+                btn_0_1_setpetname();//첫번째 버튼 이벤트 실행
             }
         });
 
         //설정 눌렀을때
-        btnarray.get(2).addActionListener(new SaveButtonEvent());
+        btnarray.get(1).addActionListener(new SaveButtonEvent());
     }
 
     public void btn_0_0_patList(){
@@ -114,12 +119,14 @@ public class TitleWorld extends World{
     public void btn_0_1_setpetname(){
         Label title = new Label("이름설정");
         title.setFont(font);
-        title.setBounds(150, 50, 300, 50);
+        title.setBounds(
+            GameInstance.getInstance().gameFrameSizX/2 - 100
+            , 150, 200, 50);
         add(title);
         TextField setName = new TextField("이름을 입력하세요.");
         Font subFont = new Font("",Font.PLAIN, 15);
         setName.setFont(subFont);
-        setName.setBounds(100, 130, 300, 30);
+        setName.setBounds(200, 250, 300, 60);
 
         setName.addFocusListener(new FocusAdapter() {
             @Override
@@ -141,7 +148,7 @@ public class TitleWorld extends World{
         add(setName);
 
         Button btn = new Button("게임시작");
-        btn.setBounds(150, 200, 300, 50);
+        btn.setBounds(150, 310, 300, 50);
 
         btn.addActionListener( new ActionListener() {
             @Override
