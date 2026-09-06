@@ -24,6 +24,7 @@ public class GW_PetInfoBE extends JFrame{
     public void btnEvent(){
         System.out.println("스테이터스 버튼 클릭됨");
         JFrame frame = new JFrame();
+        frame.setLayout(null);
 
         width = GameInstance.getInstance().gameFrameSizX/2;
         height = GameInstance.getInstance().gameFrameSizY;
@@ -39,10 +40,12 @@ public class GW_PetInfoBE extends JFrame{
 
         JLabel namelabel = spawnJLabel(pet.getName());
         namelabel.setFont(new Font("",Font.BOLD,25));
+        JLabel caselabel = spawnJLabel("상태:"+pet.objCase);
         JLabel hungerlabel = spawnJLabel("허기: "+String.format("%.1f",pet.hunger));
-        JLabel hygiene = spawnJLabel(""+pet.hygiene);
-        spawnJLabel(""+pet.hygiene);
-        spawnJLabel(""+pet.hygiene);
+        JLabel hygiene = spawnJLabel("청결도: "+pet.hygiene);
+        JLabel funlable = spawnJLabel("청결도: "+pet.fun);
+        JLabel restroomlable = spawnJLabel("청결도: "+pet.restroom);
+        
 
         //------Consumer를 통해 실시간 업데이트 함수
         pet.setHungerC(newint ->{
@@ -51,6 +54,18 @@ public class GW_PetInfoBE extends JFrame{
 
         pet.setHygieneC(newint ->{
             hygiene.setText("청결도: "+String.format("%.1f",pet.hygiene));
+        });
+
+        pet.setCaseC(newint ->{
+            caselabel.setText("상태: " + pet.objCase);  
+        });
+
+        pet.setFunC(newint ->{
+            funlable.setText("재미도: " + pet.fun);
+        });
+
+        pet.setRestRoom(newint ->{
+            restroomlable.setText("화장실: " + pet.restroom);
         });
 
         
@@ -82,13 +97,14 @@ public class GW_PetInfoBE extends JFrame{
             
             y += h + margin;
             frame.add(jb);
-            System.out.println(y);
+            System.out.println(w);
         }
     }
 
     public JLabel spawnJLabel(String setText){
         JLabel jlb = new JLabel();
         jlb.setText(setText);
+        jlb.setSize(0, 0);
         labellist.add(jlb);
         return jlb;
     };

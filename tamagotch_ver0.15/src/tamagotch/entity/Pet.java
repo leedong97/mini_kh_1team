@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import src.tamagotch.core.GameObject;
+import src.tamagotch.entity.petAlgo.UpdateFun;
 import src.tamagotch.entity.petAlgo.UpdateHunger;
 import src.tamagotch.entity.petAlgo.UpdateHygiene;
 import src.tamagotch.entity.petAlgo.petAlgoCore.PetAlgo;
@@ -17,8 +18,13 @@ public class Pet extends GameObject{
     private String name;
     public float hunger = 100;//기본 값 100(나이 먹으면 커지게?)
     public Consumer<Float> hungerC;
-    public float hygiene = 100;
+    public float hygiene = 100; //청결도
     public Consumer<Float> hygieneC; //작업 편의성을 위해 public으로 두었습니다.
+    public Consumer<String> caseC;
+    public float fun = 100; //재미도
+    public Consumer<Float>funC;
+    public float restroom = 100;//화장실필요도
+    public Consumer<Float> restroomC;
 
     public List<PetAlgo> petAlgo;
 
@@ -31,6 +37,7 @@ public class Pet extends GameObject{
         petAlgo.add((UpdateHunger)new UpdateHunger().init(this));
         //World클레스의 spawnGameObject함수와 마찬가지로, event세팅함수를 만들어두었습니다.
         setAlgo(new UpdateHygiene());
+        setAlgo(new UpdateFun());
     }
     
     @Override
@@ -69,6 +76,18 @@ public class Pet extends GameObject{
     //청결도 consumer
     public void setHygieneC(Consumer<Float> listenr){
         hygieneC = listenr;
+    }
+    //상태 consumer
+    public void setCaseC(Consumer<String> listenr){
+        caseC = listenr;
+    }
+    //재미 consumer
+    public void setFunC(Consumer<Float> listenr){
+        funC = listenr;
+    }
+    //화장실필요도 consumer
+    public void setRestRoom(Consumer<Float>lister){
+        restroomC = lister;
     }
 
     public void feeding(Food food){

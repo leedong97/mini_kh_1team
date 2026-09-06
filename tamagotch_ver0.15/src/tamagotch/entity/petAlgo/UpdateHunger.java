@@ -16,11 +16,19 @@ public class UpdateHunger extends PetAlgo{
             pet.hungerC.accept(pet.hunger);
         }
         if(pet.hunger > 50){
-        }else if(pet.hunger > 0){
-            System.out.println("배고파");
+            if(pet.objCase.equals("hunger")){
+                pet.setObjectCase("normal");
+                if(pet.caseC != null)
+                    pet.caseC.accept(pet.objCase);
+            }
 
-            //배고픔으로 상태전환(아직 배고픔관련 애니메이션이 없어 move로 전환)
-            if(pet.objCase.equals("normal"))pet.setObjectCase("hunger");
+        }else if(pet.hunger > 0){
+            //배고픔으로 상태전환
+            if(pet.objCase.equals("normal")){
+                pet.setObjectCase("hunger");
+                if(pet.caseC != null)
+                    pet.caseC.accept(pet.objCase);
+            }
 
             if(GameInstance.getInstance().getWorld() != null){
                 Food food = GameInstance.getInstance().getWorld().getGameObject("Food");
@@ -33,6 +41,8 @@ public class UpdateHunger extends PetAlgo{
             //펫사망?
             System.out.println("팻사망");
             pet.setObjectCase("death");
+            if(pet.caseC != null)
+                pet.caseC.accept(pet.objCase);
         }
         //System.out.println(levelOfHunger);
     }
