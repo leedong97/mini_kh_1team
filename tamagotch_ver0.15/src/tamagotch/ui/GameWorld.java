@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import src.tamagotch.core.CVector2D;
 import src.tamagotch.core.GameInstance;
@@ -16,14 +17,18 @@ import src.tamagotch.core.World;
 import src.tamagotch.core.algo.Algo;
 import src.tamagotch.entity.Food;
 import src.tamagotch.entity.Pet;
+import src.tamagotch.ui.ButtonEvent.GW_FitnessGame;
+import src.tamagotch.ui.ButtonEvent.GW_FoodEvent;
 import src.tamagotch.ui.ButtonEvent.GW_PetInfoBE;
+import src.tamagotch.ui.ButtonEvent.GW_bath;
+import src.tamagotch.ui.ButtonEvent.GW_cleanMap;
 
 public class GameWorld extends World{
-    private JButton[] buttons;
+    public JButton[] buttons;
     private GamFram gf;
     CVector2D[][] display;
 
-    private int buttonsection = 0; //버튼 섹션
+    public int buttonsection = 0; //버튼 섹션
     
     public GameWorld(GamFram gf){
         buttonSet();
@@ -53,7 +58,7 @@ public class GameWorld extends World{
 
     private void buttonSet(){
         // 버튼 생성     
-        String[] buttonNames= {"😊","🍚","🛁","🚽","🎮","💊","🎾","💤"};
+        String[] buttonNames= {"😊 정보","🍚 밥","🛁 샤워","🚽 화장실 ","🎮 게임","💊 약","🎾 운동","💤 취침", "💾 저장", "⏻ 종료"};
         buttons = new JButton[buttonNames.length];
 
         setLayout(null);
@@ -63,7 +68,7 @@ public class GameWorld extends World{
 
         for(int i = 0; i < buttonNames.length/2; i++){
             buttons[i] = new JButton(buttonNames[i]);
-            buttons[i].setFont(new Font("",Font.PLAIN,20));
+            buttons[i].setFont(new Font("",Font.BOLD,20));
             buttons[i].setBorderPainted(false);
             buttons[i].setContentAreaFilled(false);
             buttons[i].setBounds(btnsiz * i, 0, btnsiz, btnsiz/2);
@@ -73,7 +78,7 @@ public class GameWorld extends World{
         //버튼 배치 아랫줄
         for(int i = 0; i < buttonNames.length/2; i++){
             buttons[i + buttonNames.length/2] = new JButton(buttonNames[i + buttonNames.length/2]);
-            buttons[i + buttonNames.length/2].setFont(new Font("",Font.PLAIN,20));
+            buttons[i + buttonNames.length/2].setFont(new Font("",Font.BOLD,20));
             buttons[i + buttonNames.length/2].setBorderPainted(false);
             buttons[i + buttonNames.length/2].setContentAreaFilled(false);
             buttons[i + buttonNames.length/2].setBounds(
@@ -95,20 +100,21 @@ public class GameWorld extends World{
                         // 버튼별로 처리할 로직 작성 예시
                         switch(index) {
                             case 0:
-                                    new GW_PetInfoBE().btnEvent();
+                                // 캐릭터정보
+                                new GW_PetInfoBE().btnEvent();
                                 break;
                             case 1:
                                 // 밥주기
-                                foodEvent();
+                                new GW_FoodEvent().btnEvent();
                                 break;
                             case 2:
                                 // 목욕
-                                Pet pet = getGameObject("Pet");
-                                pet.hygiene = 100;
+                                new GW_bath().btnEvent();
                                 System.out.println("목욕 버튼 클릭됨");
                                 break;
                             case 3:
                                 // 똥치우기
+                                new GW_cleanMap().btnEvent();
                                 System.out.println("똥치우기 버튼 클릭됨");
                                 break;
                             case 4:
@@ -120,7 +126,7 @@ public class GameWorld extends World{
                                 System.out.println("약먹이기 버튼 클릭됨");
                                 break;
                             case 6:
-                                // 운동 시키기
+                                new GW_FitnessGame().btnEvent();
                                 System.out.println("운동 시키기 버튼 클릭됨");
                                 break;
                             case 7:
@@ -131,48 +137,6 @@ public class GameWorld extends World{
                                 System.out.println("알 수 없는 버튼");
         }}});}
     }
-
-    public void foodEvent(){
-
-        if(buttonsection == 2) return;//섹션이 같으면 반환, 저튼 중복생성 방지
-
-        String[] meals = {"분유", "고기", "쌀", "과자", "닫기"}; // -> 이구조로 다른 것들도 짜면 좋을듯
-        Button[] mealButtons = new Button[meals.length];
-
-        int btnSizX = 50;
-        int btnSizY = 30;
-
-        for(int i = 0; i < meals.length; i++){
-            mealButtons[i] = new Button(meals[i]);
-            mealButtons[i].setBounds(
-                GameInstance.getInstance().gameFrameSizX - btnSizX*2
-                ,150+(btnSizY*i) + 20
-                ,btnSizX
-                ,btnSizY
-            );
-
-            mealButtons[i].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String mealType = ((Button) e.getSource()).getLabel();
-                    if(mealType.equals("닫기")){
-                        for(int j = 0; j < mealButtons.length; j++){
-                            GameWorld.this.remove(mealButtons[j]);
-                            buttonsection = 0;
-                        }
-                    }else{
-                        spawnActor(new Food(mealType), "Food");
-                    }
-                    // 여기서 실제 밥을 먹이는 처리를 넣을 수 있습니다.
-                }
-            });
-
-            buttonsection = 2;
-            
-            add(mealButtons[i],2);
-        }
-        System.out.println("밥주기 버튼 클릭됨");
-    };//
 
     //화면분할 함수
     public void setdisplay(){
@@ -192,16 +156,16 @@ public class GameWorld extends World{
         Random r = new Random();
         for(int i = 0; i < display.length; i++){
             for(int j = 0; j < display.length; j++){
-                Label fr = new Label();
+                JLabel fr = new JLabel();
                 int xx = (int)display[i][j].x;
                 int yy = (int)display[i][j].y;
                 fr.setSize(dis, dis);
                 fr.setLocation(xx, yy);
 
-                fr.setBackground(new Color(r.nextInt(255)
-                    ,r.nextInt(255)
-                    ,r.nextInt(255)
-                ));
+                // fr.setBackground(new Color(r.nextInt(255)
+                //     ,r.nextInt(255)
+                //     ,r.nextInt(255)
+                // ));
                 add(fr, 0);
             }
         }

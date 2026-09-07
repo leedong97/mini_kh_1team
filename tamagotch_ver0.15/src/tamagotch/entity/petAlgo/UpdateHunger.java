@@ -12,6 +12,9 @@ public class UpdateHunger extends PetAlgo{
     @Override
     public void updateStat(){
         pet.hunger -= 0.1;
+        if(pet.hunger < 0){
+            pet.hunger = 0;
+        }
         if(pet.hungerC != null){
             pet.hungerC.accept(pet.hunger);
         }
@@ -22,7 +25,7 @@ public class UpdateHunger extends PetAlgo{
                     pet.caseC.accept(pet.objCase);
             }
 
-        }else if(pet.hunger > 0){
+        }else if(pet.hunger >= 0){
             //배고픔으로 상태전환
             if(pet.objCase.equals("normal")){
                 pet.setObjectCase("hunger");
@@ -37,12 +40,6 @@ public class UpdateHunger extends PetAlgo{
                 }
             }
             // 
-        }else {
-            //펫사망?
-            System.out.println("팻사망");
-            pet.setObjectCase("death");
-            if(pet.caseC != null)
-                pet.caseC.accept(pet.objCase);
         }
         //System.out.println(levelOfHunger);
     }

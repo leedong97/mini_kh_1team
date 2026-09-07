@@ -1,8 +1,5 @@
 package src.tamagotch.ui.ButtonEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -10,46 +7,49 @@ import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import src.tamagotch.core.GameInstance;
-import src.tamagotch.entity.Pet;
+import src.tamagotch.ui.ButtonEvent.btnE_Core.BtnECore;
 
 //GameWorld Petinfo button event
-public class GW_PetInfoBE extends JFrame{
-
-    List<JLabel> labellist = new ArrayList<JLabel>();
-
-    private int width;
-    private int height;
+public class GW_PetInfoBE extends BtnECore{
 
     public void btnEvent(){
         System.out.println("스테이터스 버튼 클릭됨");
-        JFrame frame = new JFrame();
-        frame.setLayout(null);
-
-        width = GameInstance.getInstance().gameFrameSizX/2;
-        height = GameInstance.getInstance().gameFrameSizY;
-
-        frame.setBounds(
-            GameInstance.getInstance().WINFRAME_W/2 + GameInstance.getInstance().gameFrameSizX/2
-            , GameInstance.getInstance().WINFRAME_Y/2 - GameInstance.getInstance().gameFrameSizY/2
-            , width
-            , height
-        );
-
-        Pet pet = GameInstance.getInstance().getWorld().getGameObject("Pet");
+        JFrame frame = setFrame();
 
         JLabel namelabel = spawnJLabel(pet.getName());
         namelabel.setFont(new Font("",Font.BOLD,25));
         JLabel caselabel = spawnJLabel("상태:"+pet.objCase);
+        JLabel healthlabel = spawnJLabel("건강: ■■■■■■■■■■■");
+        JLabel stresslabel = spawnJLabel("스트레스: ");
         JLabel hungerlabel = spawnJLabel("허기: "+String.format("%.1f",pet.hunger));
         JLabel hygiene = spawnJLabel("청결도: "+pet.hygiene);
-        JLabel funlable = spawnJLabel("청결도: "+pet.fun);
-        JLabel restroomlable = spawnJLabel("청결도: "+pet.restroom);
-        
+        JLabel funlable = spawnJLabel("재미도: "+pet.fun);
+        JLabel restroomlable = spawnJLabel("화장실: "+pet.restroom);
 
         //------Consumer를 통해 실시간 업데이트 함수
         pet.setHungerC(newint ->{
             hungerlabel.setText("허기: "+String.format("%.1f",pet.hunger));
+        });
+
+        pet.setHealthC(newint ->{
+            int n = (int)pet.health / 10;
+            String grf = "";
+            for(int i = 0; i < n; i++){
+                grf += "■";
+            }
+            healthlabel.setText("건강: " + grf);
+        });
+        pet.setStressC(newint -> {
+            int n = (int)pet.stress / 10;
+            String grf = "";
+            if(n == 0){
+
+            }else{
+                for(int i = 0; i < n; i++){
+                    grf += "■";
+                }
+            }
+            stresslabel.setText("스트레스: " + grf);
         });
 
         pet.setHygieneC(newint ->{
@@ -68,7 +68,6 @@ public class GW_PetInfoBE extends JFrame{
             restroomlable.setText("화장실: " + pet.restroom);
         });
 
-        
         //유아이 정렬
         setJLabelUI(frame, 20);
 
@@ -82,38 +81,4 @@ public class GW_PetInfoBE extends JFrame{
         });
         frame.setVisible(true);
     }
-
-    public void setJLabelUI(JFrame frame, int margin){
-        int y = margin;
-
-        for(JLabel jb : labellist){
-            int w = jb.getSize().width;
-            int h = jb.getSize().height;
-
-            if(w == 0) w = width - margin;
-            if(h == 0) h = 30;
-
-            jb.setBounds(margin, margin + y , w, h);
-            
-            y += h + margin;
-            frame.add(jb);
-            System.out.println(w);
-        }
-    }
-
-    public JLabel spawnJLabel(String setText){
-        JLabel jlb = new JLabel();
-        jlb.setText(setText);
-        jlb.setSize(0, 0);
-        labellist.add(jlb);
-        return jlb;
-    };
-
-    public JLabel spawnJLabel(String setText, int x, int y){
-        JLabel jlb = new JLabel();
-        jlb.setText(setText);
-        jlb.setLocation(x,y);
-        labellist.add(jlb);
-        return jlb;
-    };
 }

@@ -40,7 +40,7 @@ public class World extends JPanel {
 
     public void updateWorld() {
         //엑터의 매프레임 호출함수 실행
-        for (GameObject actor : actors) {
+        for (GameObject actor : new ArrayList<>(actors)) {
             if (!actor.isPendingKill()) {
                 actor.update();
             }else{

@@ -8,6 +8,7 @@ import src.tamagotch.core.GameObject;
 import src.tamagotch.entity.petAlgo.UpdateFun;
 import src.tamagotch.entity.petAlgo.UpdateHunger;
 import src.tamagotch.entity.petAlgo.UpdateHygiene;
+import src.tamagotch.entity.petAlgo.UpdateRestRoom;
 import src.tamagotch.entity.petAlgo.petAlgoCore.PetAlgo;
 
 public class Pet extends GameObject{
@@ -25,6 +26,10 @@ public class Pet extends GameObject{
     public Consumer<Float>funC;
     public float restroom = 100;//화장실필요도
     public Consumer<Float> restroomC;
+    public float health = 100;
+    public Consumer<Float> healthC;
+    public float stress = 0;
+    public Consumer<Float> stressC;
 
     public List<PetAlgo> petAlgo;
 
@@ -38,6 +43,7 @@ public class Pet extends GameObject{
         //World클레스의 spawnGameObject함수와 마찬가지로, event세팅함수를 만들어두었습니다.
         setAlgo(new UpdateHygiene());
         setAlgo(new UpdateFun());
+        setAlgo(new UpdateRestRoom());
     }
     
     @Override
@@ -57,7 +63,32 @@ public class Pet extends GameObject{
         for(PetAlgo algo : petAlgo){
             algo.updateStat();
         }
+
+        if(hygiene < 30 || fun < 30){
+            stress += 0.1;
+            if(stress >= 100){
+                stress = 100;
+            }
+            
+            if(stress >= 70){
+                health -= 0.1;
+                if(health <= 0){
+                    health = 0;
+                }
+
+                if(healthC != null) healthC.accept(health);
+            }
+
+            if(stressC != null){
+                stressC.accept(stress);
+            }
+        }
         
+        if(health <= 0){
+            setObjectCase("death");
+                if(caseC != null)
+                    caseC.accept(objCase);
+        }
     }
 
     public void setName(String name){
@@ -89,6 +120,14 @@ public class Pet extends GameObject{
     public void setRestRoom(Consumer<Float>lister){
         restroomC = lister;
     }
+    //건강 consumer
+    public void setHealthC(Consumer<Float>lister){
+        healthC = lister;
+    }
+    //스트레스 consumer
+    public void setStressC(Consumer<Float>lister){
+        stressC = lister;
+    }
 
     public void feeding(Food food){
         switch(food.name){
@@ -105,7 +144,6 @@ public class Pet extends GameObject{
                 hunger += -5;
                 break;
         }
-        System.out.println(hunger);
         System.out.println(hunger);
     }
 

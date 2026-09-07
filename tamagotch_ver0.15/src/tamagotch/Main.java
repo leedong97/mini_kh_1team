@@ -1,11 +1,5 @@
 package src.tamagotch;
 
-import java.awt.Frame;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import src.tamagotch.ui.GamFram;
 
 public class Main {

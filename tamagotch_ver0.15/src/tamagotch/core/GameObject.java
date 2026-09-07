@@ -158,4 +158,8 @@ public abstract class GameObject {
         currentAnimationFram ++;
         //World의 updateAnim함수에서 업데이트 중
     }
+
+    public World getWorld(){
+        return world;
+    }
 }

@@ -17,9 +17,14 @@
 
 5.core의 algo에 GridPathfinder클레스가 있습니다. 길찾기 알고리즘이고, Ai로 만들었습니다. (미완)
 6.PetAlgo패키지에 Pet의 이동에 필요한 함수도 UpdateMove라는 클레스로 구현해두었습니다.(미완)
+7. World의 Update함수에 for문이 수정돼었습니다.
+- for (GameObject actor : actors) -> 기존에 for문을 도는 상태에서 spawn이 돼면, 버그가 발생하여
+- for (GameObject actor : new ArrayList<>(actors)) -> 복사한 배열을 순회하는 형태로 변경하였습니다.
 
 - UI배치를 좀더 쉽게 하기위해 함수들을 모아둘 예정
-
-
-
 길찾기 디버깅, UpdatMove디버깅, spawn할 때 CVector2D함수를 통해 스폰위치 정보 수정예정
+
+저장, 불러오기,
+엔딩크레딧, 운동하기,
+약먹이기,
+포인트기능 도입

@@ -1,5 +1,7 @@
 package src.tamagotch.entity;
 
+import java.util.Random;
+
 import src.tamagotch.core.GameObject;
 
 public class Food extends GameObject {
@@ -16,6 +18,9 @@ public class Food extends GameObject {
     public void beginPlay() {
         // TODO Auto-generated method stub
         setBody("🍚",50);
+
+        Random rand = new Random();
+        setLocation(rand.nextInt(300) + 200, rand.nextInt(300) + 200);
     }
     @Override
     public void update() {
@@ -25,6 +30,7 @@ public class Food extends GameObject {
 
     public void using(Pet pet){
         pet.hunger+=80;
+        pet.restroom -= 30;
         System.out.println("펫의 배고픔 게이지가 업데이트 돼었습니다." + pet.hunger);
         this.destory();
     }
